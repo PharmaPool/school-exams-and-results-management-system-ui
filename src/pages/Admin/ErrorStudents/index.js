@@ -57,8 +57,7 @@ function ErrorStudents() {
         <div>
           <ExportToExcel
             tableId="myTable"
-            filename={`${session}: ${level} Level:${" "}
-            probation list`}
+            filename={`${session}: ${level} Level: error students list`}
           />
         </div>
       </div>

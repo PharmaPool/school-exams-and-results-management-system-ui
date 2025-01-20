@@ -31,6 +31,7 @@ function Table({ students }) {
         (current) =>
           current.session === session && current.semester === Number(semester)
       );
+
       const current_courses = courses.courses.filter(
         (course) => course.course_code in current_semester
       );
@@ -45,15 +46,18 @@ function Table({ students }) {
         (sess) => sess.session === prev_session
       );
 
-      let prev_cgpa;
-      if (prev_gpa) prev_cgpa = prev_gpa.cgpa;
-      else prev_cgpa = 0;
+      let prev_cgpa, prev_level;
+      if (prev_gpa) {
+        prev_cgpa = prev_gpa.cgpa;
+        prev_level = prev_gpa.level;
+      } else prev_cgpa = 0;
 
       return {
         student: {
           _id: student._id,
           fullname: student.fullname,
           reg_no: student.reg_no,
+          level: student.level,
           cgpa: student.cgpa,
         },
         current_courses,
@@ -62,6 +66,8 @@ function Table({ students }) {
         show: Number(session_gpa.cgpa) < 2.5 && Number(prev_cgpa) < 2.5,
         session_gpa: session_gpa.cgpa,
         prev_gpa: prev_cgpa,
+        session_level: session_gpa.level,
+        prev_level,
       };
     })
     .filter(({ student, current_courses, externals, gpa, show }) => show);
@@ -98,11 +104,12 @@ function Table({ students }) {
             {/* {course_codes.map((course_code) => (
               <th className="center">{course_code}</th>
             ))} */}
-            <th className="center">previous session cgpa</th>
-            {semester == "2" && (
-              <th className="center">current session cgpa</th>
+            <th className="center">{prev_session} session/level</th>
+            {semester == "1" && (
+              <th className="center">{session} session/level</th>
             )}
             {/* {semester == "2" && <th className="center">overall cgpa</th>} */}
+            <th className="center">current level</th>
           </tr>
         </thead>
         <tbody>
@@ -117,6 +124,8 @@ function Table({ students }) {
                   show,
                   session_gpa,
                   prev_gpa,
+                  session_level,
+                  prev_level,
                 },
                 i
               ) =>
@@ -142,9 +151,10 @@ function Table({ students }) {
                           Number(prev_gpa).toFixed(2) < 2.5 ? "red" : "black",
                       }}
                     >
-                      {show && Number(prev_gpa).toFixed(2)}
+                      <span>{show && Number(prev_gpa).toFixed(2)}</span> {"- "}
+                      <span style={{ color: "black" }}>{prev_level}</span>
                     </td>
-                    {semester == "2" && (
+                    {semester == "1" && (
                       <td
                         className="center"
                         style={{
@@ -155,9 +165,12 @@ function Table({ students }) {
                               : "black",
                         }}
                       >
-                        {show && Number(session_gpa).toFixed(2)}
+                        <span>{show && Number(session_gpa).toFixed(2)}</span>{" "}
+                        {"- "}
+                        <span style={{ color: "black" }}>{session_level}</span>
                       </td>
                     )}
+                    <td className="center">{student.level}</td>
                     {/* {semester == "2" && (
                       <td className="center" style={{ fontWeight: "bold" }}>
                         {show && Number(student.cgpa).toFixed(2)}

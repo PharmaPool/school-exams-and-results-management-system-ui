@@ -10,12 +10,10 @@ import generatePDF from "react-to-pdf";
 
 function AdminTranscript() {
   const target = useRef();
-  const { _id, sesion } = useParams();
+  const { _id, sesion, level } = useParams();
   const { socket } = useContext(ValueContext);
   const [student, setStudent] = useState({});
-  const [session, setSession] = useState("");
   const [session_gpa, setSession_gpa] = useState("");
-  const [level, setLevel] = useState("");
   const [first_semester, setFirst_semester] = useState([]);
   const [second_semester, setSecond_semester] = useState([]);
   const [first_external, setFirst_external] = useState([]);
@@ -28,36 +26,26 @@ function AdminTranscript() {
   socket.on("transcript", (res) => {
     setSession_gpa(res.session_gpa);
     setStudent(res.student);
-    setSession(
-      res.student.total_semesters[res.student.total_semesters.length - 1]
-        .session
-    );
-    setLevel(
-      res.student.total_semesters[res.student.total_semesters.length - 1].level
-    );
     setFirst_semester(
-      res.student.total_semesters[
-        res.student.total_semesters.length - 1
-      ].courses.filter((course) => course.course_code in professionals)
+      res.student.total_semesters
+        .find((sem) => sem.session === sesion && sem.semester === 1)
+        .courses.filter((course) => course.course_code in professionals)
     );
-    res.student.total_semesters[res.student.total_semesters.length - 2] &&
-      setSecond_semester(
-        res.student.total_semesters[
-          res.student.total_semesters.length - 2
-        ].courses.filter((course) => course.course_code in professionals)
-      );
-    res.student.total_semesters[res.student.total_semesters.length - 1] &&
-      setFirst_external(
-        res.student.total_semesters[
-          res.student.total_semesters.length - 1
-        ].courses.filter((course) => !(course.course_code in professionals))
-      );
-    res.student.total_semesters[res.student.total_semesters.length - 2] &&
-      setSecond_external(
-        res.student.total_semesters[
-          res.student.total_semesters.length - 2
-        ].courses.filter((course) => !(course.course_code in professionals))
-      );
+    setSecond_semester(
+      res.student.total_semesters
+        .find((sem) => sem.session === sesion && sem.semester === 1)
+        .courses.filter((course) => course.course_code in professionals)
+    );
+    setFirst_external(
+      res.student.total_semesters
+        .find((sem) => sem.session === sesion && sem.semester === 1)
+        .courses.filter((course) => !(course.course_code in professionals))
+    );
+    setSecond_external(
+      res.student.total_semesters
+        .find((sem) => sem.session === sesion && sem.semester === 2)
+        .courses.filter((course) => !(course.course_code in professionals))
+    );
   });
 
   const today = new Date();
@@ -110,7 +98,7 @@ function AdminTranscript() {
               Programme: <b>Pharm. D</b>
             </p>
             <p>
-              Session: <b>{session}</b>
+              Session: <b>{sesion}</b>
             </p>
             <p>
               Level: <b>{level}</b>
