@@ -14,6 +14,7 @@ table tr:nth-child(odd) {
 
 tr {
   cursor: pointer;
+  font-size: 0.9rem;
 }
 
 button:hover {

@@ -27,25 +27,27 @@
   border-bottom: 0.1px solid #020263;
 }
 
-.table {
+.tabl{
   /* width: 100%; */
   padding: 1rem 0rem;
   text-align: left;
   text-transform: uppercase;
 }
 
-.table table {
+.tabl table {
   width: 100%;
 }
 
-.table table th{
+.tabl table th{
   background-color: black;
   color: white;
   padding: 0.1rem 0.3rem;
+  text-transform: uppercase;
 }
 
+
 .left{
-  text-align: center;
+  text-align: left;
 }
 
 .center{

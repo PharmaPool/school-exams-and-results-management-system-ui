@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import "./transcript.css";
+// import "./transcript.css";
 import unn from "../../../data/unn.png";
 import Table from "./components/Table";
 import { useParams } from "react-router-dom";

@@ -31,6 +31,8 @@ import DetailsUpdate from "./pages/Student/DetailsUpdate";
 import StudentDashboard from "./pages/Student/Dashboard";
 import Transcript from "./pages/Student/Transcript";
 
+import TableExtractor from "./pages/TableExtractor";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -63,6 +65,7 @@ function App() {
           <Route path="/admin/faculty/error/students/sessions/:sesion" exact element={<OtherErrorStudentsSession/>}/>
           <Route path="/admin/faculty/error/students/list/:session/:_id/:level/:semester" exact element={<ErrorStudents/>}/>
           
+          <Route path="/" exact element={<TableExtractor/>}/>
           <Route path="/student" exact element={<Student/>}/>
           <Route path="/student/password/reset" exact element={<PasswordReset/>}/>
           <Route path="/student/details/:_id" exact element={<DetailsUpdate/>}/>

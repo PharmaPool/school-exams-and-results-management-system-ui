@@ -4,7 +4,6 @@
 
 .student_db table td {
   padding: 0.1rem;
-  font-size: small;
 }
 
 .student_dashboard_header_img {
@@ -102,18 +101,15 @@
 .signature {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 2rem;
+  margin-top: 7rem;
+  font-size: 1rem;
 }
 
-.signature div{
-    text-align: center;
-    padding: 0rem 4rem;
+.signature div {
+  text-align: center;
+  padding: 0rem 4rem;
 }
 
-.signature div p{
-    margin: 0rem;
+.signature div p {
+  margin: 0rem;
 }
-
-/* .trans table td{
-    padding: 0.2rem 0.5rem;
-} */

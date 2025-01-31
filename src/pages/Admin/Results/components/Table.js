@@ -43,7 +43,7 @@ function Table({ students }) {
         externals,
         gpa: courses.gpa,
         show: current_courses.length > externals.length,
-        session_gpa: session_gpa.cgpa,
+        session_gpa: session_gpa && session_gpa.cgpa,
       };
     })
     .filter(({ student, current_courses, externals, gpa, show }) => show);
@@ -69,12 +69,12 @@ function Table({ students }) {
   });
 
   return (
-    <div class="table" id="myTable">
+    <div class="tabl" id="myTable">
       <table>
         <thead>
           <tr>
             <th className="center">s/n</th>
-            <th>names</th>
+            <th style={{ textAlign: "left" }}>names</th>
             <th>reg.no</th>
             {course_codes.map((course_code) => (
               <th className="center">{course_code}</th>
@@ -96,6 +96,7 @@ function Table({ students }) {
                     <td className="center">{i + 1}</td>
                     <td
                       onClick={() => navigate(`/admin/student/${student._id}`)}
+                      style={{ textAlign: "left" }}
                     >
                       {student.fullname}
                     </td>

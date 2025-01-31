@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import levels from "../../../data/levels";
 import units from "../../../data/units";
-import "./level.css";
+// import "./level.css";
 import Table from "./components/Table";
 import useExcelParser from "./components/useExcelParser";
 import { ValueContext } from "../../../Context";
@@ -78,17 +78,28 @@ function Level() {
   };
 
   const handle_external_course = () => {
-    socket.emit("register_student", {
-      reg_no,
-      level,
-      course_title: title,
-      course_code: code,
-      unit_load,
-      semester,
-      session,
-      class_id,
-      external: true,
-    });
+    fetch("http://127.0.0.1:8000/api/class/course/register", {
+      method: "POST",
+      body: JSON.stringify({
+        reg_no,
+        level,
+        course_title: title,
+        course_code: code,
+        unit_load,
+        semester,
+        session,
+        class_id,
+        external: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

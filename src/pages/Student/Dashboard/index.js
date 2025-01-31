@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import "./studentdashboard.css";
+// import "./studentdashboard.css";
 import unn from "../../../data/unn.png";
 import Table from "./ocmponents/Table";
 import GPtable from "./ocmponents/GPtable";

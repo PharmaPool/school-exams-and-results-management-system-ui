@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import "./transcript.css";
+// import "./transcript.css";
 import unn from "../../../data/unn.png";
 import Table from "./components/Table";
 import { useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ function AdminTranscript() {
   const [second_semester, setSecond_semester] = useState([]);
   const [first_external, setFirst_external] = useState([]);
   const [second_external, setSecond_external] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     socket.emit("transcript", { _id, sesion });
@@ -26,26 +27,43 @@ function AdminTranscript() {
   socket.on("transcript", (res) => {
     setSession_gpa(res.session_gpa);
     setStudent(res.student);
-    setFirst_semester(
-      res.student.total_semesters
-        .find((sem) => sem.session === sesion && sem.semester === 1)
-        .courses.filter((course) => course.course_code in professionals)
-    );
-    setSecond_semester(
-      res.student.total_semesters
-        .find((sem) => sem.session === sesion && sem.semester === 1)
-        .courses.filter((course) => course.course_code in professionals)
-    );
-    setFirst_external(
-      res.student.total_semesters
-        .find((sem) => sem.session === sesion && sem.semester === 1)
-        .courses.filter((course) => !(course.course_code in professionals))
-    );
-    setSecond_external(
-      res.student.total_semesters
-        .find((sem) => sem.session === sesion && sem.semester === 2)
-        .courses.filter((course) => !(course.course_code in professionals))
-    );
+    res.student.total_semesters.find(
+      (sem) => sem.session === sesion && sem.semester === 1
+    ).courses &&
+      setFirst_semester(
+        res.student.total_semesters
+          .find((sem) => sem.session === sesion && sem.semester === 1)
+          .courses.filter((course) => course.course_code in professionals)
+      );
+    res.student.total_semesters.find(
+      (sem) => sem.session === sesion && sem.semester === 2
+    ).courses &&
+      setSecond_semester(
+        res.student.total_semesters
+          .find((sem) => sem.session === sesion && sem.semester === 2)
+          .courses.filter((course) => course.course_code in professionals)
+      );
+    res.student.total_semesters
+      .find((sem) => sem.session === sesion && sem.semester === 1)
+      .courses.filter((course) => !(course.course_code in professionals)) &&
+      setFirst_external(
+        res.student.total_semesters
+          .find((sem) => sem.session === sesion && sem.semester === 1)
+          .courses.filter((course) => !(course.course_code in professionals))
+      );
+    res.student.total_semesters
+      .find((sem) => sem.session === sesion && sem.semester === 2)
+      .courses.filter((course) => !(course.course_code in professionals)) &&
+      setSecond_external(
+        res.student.total_semesters
+          .find((sem) => sem.session === sesion && sem.semester === 2)
+          .courses.filter((course) => !(course.course_code in professionals))
+      );
+
+    res.student.total_semesters
+      .find((sem) => sem.session === sesion && sem.semester === 2)
+      .courses.filter((course) => !(course.course_code in professionals))
+      .length > 0 && setShow(true);
   });
 
   const today = new Date();
@@ -61,48 +79,51 @@ function AdminTranscript() {
   return (
     <>
       <div class="student_db" id="transcript" ref={target}>
-        <div class="student_dashboard_head">
-          <div class="passport">
-            <div class="passport_img">
-              <img src={unn} alt="" />
+        <div className="d_head">
+          <div class="student_dashboard_head">
+            <div class="passport">
+              <div class="passport_img">
+                <img src={unn} alt="" />
+              </div>
             </div>
-          </div>
-          <div class="dashboard_header">
-            {/* <div class="student_dashboard_header_img">
+            <div class="dashboard_header">
+              {/* <div class="student_dashboard_header_img">
             <img src={unn} alt="" />
           </div> */}
-            <div class="student_dashboard_head_title">
-              <h2>Faculty of Pharmaceutical Sciences</h2>
-              <p style={{ fontWeight: "bold", fontSize: "larger" }}>
-                University of Nigeria Nsukka
-              </p>
-              <h2>Student's Result</h2>
-              <i>(Faculty Copy)</i>
+              <div class="student_dashboard_head_title">
+                <p>Faculty of Pharmaceutical Sciences</p>
+                <p>University of Nigeria Nsukka</p>
+                <p>PHARM. D PROFESSIONAL EXAMINATION RESULT SHEET</p>
+                <i style={{ fontSize: "x-large", fontWeight: "bold" }}>
+                  (Faculty Copy)
+                </i>
+              </div>
             </div>
-          </div>
-          <div class="passport">
-            <div class="passport_img">
-              <img src={student.profile_image} alt="" />
+            <div class="passport">
+              <div class="passport_img">
+                <img src={student.profile_image} alt="" />
+              </div>
             </div>
           </div>
         </div>
         <div class="student_dashboard_bod">
           <div class="student_dashboard_body_details">
-            <p>
-              Name of Student: <b>{student.fullname}</b>
-            </p>
-            <p>
-              Reg. No: <b>{student.reg_no}</b>
-            </p>
-            <p>
-              Programme: <b>Pharm. D</b>
-            </p>
-            <p>
-              Session: <b>{sesion}</b>
-            </p>
-            <p>
-              Level: <b>{level}</b>
-            </p>
+            <div>
+              <p>
+                Name of Student: <b>{student.fullname}</b>
+              </p>
+              <p>
+                Reg. No: <b>{student.reg_no}</b>
+              </p>
+            </div>
+            <div>
+              <p>
+                Session: <b>{sesion}</b>
+              </p>
+              <p>
+                Level: <b>{level}</b>
+              </p>
+            </div>
           </div>
 
           <Table
@@ -111,6 +132,7 @@ function AdminTranscript() {
             second_semester={second_semester}
             first_external={first_external}
             second_external={second_external}
+            show={show}
           />
           {/* <GPtable
             generatePDF={generatePDF}
@@ -120,22 +142,11 @@ function AdminTranscript() {
         </div>
         <div class="gp_tab">
           <div class="transcript_btn"></div>
-          <div style={{ textTransform: "uppercase" }}>
-            <div class="cummulative_grade">
-              <p>cummulative grade point avarage:</p>
-              <h3>{student.cgpa}</h3>
-            </div>
-            <div class="total_grade">
-              <p>cummulative grade point:</p>
-              <h3>{session_gpa}</h3>
-            </div>
-          </div>
         </div>
         <div class="signature">
           <div class="exam_office">
             <p
               style={{
-                fontSize: "large",
                 textTransform: "capitalize",
                 fontWeight: "bold",
               }}
@@ -149,7 +160,6 @@ function AdminTranscript() {
           <div class="dean">
             <p
               style={{
-                fontSize: "large",
                 textTransform: "capitalize",
                 fontWeight: "bold",
               }}
@@ -161,12 +171,88 @@ function AdminTranscript() {
             </p>
           </div>
         </div>
+        <div className="grade_table">
+          <table>
+            <thead>
+              <tr
+                style={{
+                  textTransform: "uppercase",
+                  backgroundColor: "black",
+                  color: "white",
+                }}
+              >
+                <th colSpan={3}>non-professional courses</th>
+                <th colSpan={3}>professional courses</th>
+              </tr>
+              <tr style={{ textTransform: "capitalize", fontWeight: "550" }}>
+                <td>score range</td>
+                <td>letter grade</td>
+                <td>grade point</td>
+                <td>score range</td>
+                <td>letter grade</td>
+                <td>grade point</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>70-100</td>
+                <td>A (Excellent)</td>
+                <td>5</td>
+                <td>70-100</td>
+                <td>A (Excellent)</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>60-69</td>
+                <td>B (Very Good)</td>
+                <td>4</td>
+                <td>60-69</td>
+                <td>B (Very Good)</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>50-59</td>
+                <td>c (Good)</td>
+                <td>3</td>
+                <td>50-59</td>
+                <td>c (Good)</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>45-49</td>
+                <td>D (Fair)</td>
+                <td>2</td>
+                <td>0-49</td>
+                <td>F (Fail)</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>40-44</td>
+                <td>E (Pass)</td>
+                <td>1</td>
+                <td colSpan={3}>
+                  <b style={{ color: "red" }}>*</b>{" "}
+                  {"< 60 F (Fail) for PCT224 and PCT422"}{" "}
+                </td>
+              </tr>
+              <tr>
+                <td>0-39</td>
+                <td>F (Fail)</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="gp_tab">
         <div class="transcript_btn">
           <button
-            onClick={() => generatePDF(target, { filename: "transcript.pdf" })}
+            onClick={() =>
+              generatePDF(target, {
+                filename: `${student.fullname} ${sesion} result`,
+              })
+            }
           >
             Print
           </button>

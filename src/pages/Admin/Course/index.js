@@ -60,7 +60,7 @@ function Course() {
         })
         .catch((err) => console.log(err))
     );
-    setAlert(true, "scores added successfully!", "success")
+    setAlert(true, "scores added successfully!", "success");
   };
 
   return (

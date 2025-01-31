@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./level.css";
+// import "./level.css";
 import Table from "./components/Table";
 import { ValueContext } from "../../../Context";
 import ExportToExcel from "../../../components/ExportToExcel";
